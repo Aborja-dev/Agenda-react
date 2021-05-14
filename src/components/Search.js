@@ -1,9 +1,10 @@
 import {Input} from './Input'
+import '../App.css'
 
 export const Search = (props) => {
 	return (
 		<div >
-			<Input name={''} setNewValue={props.state} />
+			<Input class={'search__input'} name={''} setNewValue={props.state} />
 		</div>
 	)
 }

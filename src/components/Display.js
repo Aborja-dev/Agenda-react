@@ -1,9 +1,11 @@
+
 import phoneService from '../services/phonebook'
+import '../App.css'
 
 const LabelPerson = ({name, number, id})=>{
 	return(
-		<div>
-			<p>
+		<div className={'display__item'}>
+			<p className={'display__name'}>
 				{name} <span>{number}</span>
 			</p>	
 			{	name==''?'':<Button id={id} name={name} />	}
@@ -12,6 +14,7 @@ const LabelPerson = ({name, number, id})=>{
 
 const Button = ({id, name})=> {
 	const clickHandler = ()=>{
+		console.log("🚀 ~ file: Display.js ~ line 16 ~ Button ~ id", id)
 		const confirm = window.confirm(`Borrar el nombre ${name}`)
         if (confirm){
 			phoneService.deletePerson(id)
@@ -24,14 +27,14 @@ const Button = ({id, name})=> {
 
 export const Display = (props) => {
 	return (
-		<div >
-			<h2 >Numeros</h2>
+		<div className={ 'display container' }>
+			<h2 className={'title'}>Numeros</h2>
 			{props.list.map( (element)=>
 				<LabelPerson 
 					key={element.name} 
 					name={element.name} 
 					number={element.number} 
-					id={element.id}
+					id={element._id}
 				/> 
 			)}
 		</div>

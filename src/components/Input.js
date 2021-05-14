@@ -1,3 +1,4 @@
+import '../App.css'
 
 export const Input = (props)=>{
 	const handlerChange = (event) => {
@@ -6,7 +7,7 @@ export const Input = (props)=>{
 	 }
 	 
 	return (
-		<div>
-			{ props.name }	<input onChange={handlerChange}/>
+		<div className={'search'}>
+			{ props.name }	<input className={props.class} onChange={handlerChange}/>
 		</div>
 )}

@@ -3,7 +3,7 @@ import axios from 'axios'
 const url = 'http://localhost:3001'
 
 const getList = ()=>{
-    const request = axios.get(`${url}/persons`)
+    const request = axios.get(`${url}/list`)
     return request.then(res => res.data)
 }
 

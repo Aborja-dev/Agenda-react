@@ -1,23 +1,31 @@
 import { useState } from 'react'
-import axios from 'axios'
-
 import { Input } from './Input'
 import phoneService from '../services/phonebook'
-const URL = 'http://localhost:3001/persons'
 
-export const Form = ({persons, setPersons }) => {
+import '../App.css'
+
+const NewPersonAlert = ()=>{
+	const alert = document.getElementById('mensaje')
+	alert.classList.remove('disabled')
+    alert.classList.add('active-message')
+	setTimeout(()=>{
+		alert.classList.remove('active-message')
+		alert.classList.add('disabled')
+	}, 3000)
+}
+
+export const Form = ({persons, setPersons, setAddName }) => {
 
 	const isRepeat = (searchedName, nameArr) => {
 		const result = nameArr.find( person => person.name == searchedName )
-		return typeof(result) == 'object'?result.id:false
+		return typeof(result) == 'object'?result._id:false
 	 }
 
 	const [ newName, setNewName ] = useState('')
 	const [ newPhone, setNewphone ] = useState('')
 
-	const handlerSubmit = async (event)=> {
+	const handlerSubmit = (event)=> {
 		event.preventDefault()
-		
 		const newPerson = {
 		  name : newName,
 		  number: newPhone,
@@ -27,19 +35,20 @@ export const Form = ({persons, setPersons }) => {
             const body = {...newPerson, id: personId}
 			const confirm = window.confirm(`${newPerson.name} ya existe. ¿Quiere cambiar el numero de telefono?`)
 			if (confirm){
-                console.log("🚀 ~ file: Form.js ~ line 31 ~ handlerSubmit ~ body", body)
 				phoneService.updatePerson(body)
 				window.location.reload(false)
 			}
 		}
 		else {
-			phoneService.addPerson(newPerson).then( result => setPersons(persons.concat(result)))
+			phoneService.addPerson(newPerson).then(returnedNewPerson => setPersons(persons.concat(returnedNewPerson)))
+			setAddName(newPerson.name)
+			NewPersonAlert()
 		}
 	 }
 
 	return (
-	<div>
-		<h2>Agregar nuevo numero</h2>
+	<div className={ 'container' }>
+		<h2 className={'title'}>Agregar nuevo numero</h2>
 		<form onSubmit= {handlerSubmit} className={ 'form' }>
             <div className={ 'form__data' }>
                 <Input name = {'Nombre'} setNewValue = {setNewName}/>

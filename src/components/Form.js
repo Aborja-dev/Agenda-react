@@ -1,29 +1,39 @@
 import { useState } from 'react'
-import { Input } from './Input'
+import axios from 'axios'
 
+import { Input } from './Input'
+import phoneService from '../services/phonebook'
+const URL = 'http://localhost:3001/persons'
 
 export const Form = ({persons, setPersons }) => {
 
 	const isRepeat = (searchedName, nameArr) => {
 		const result = nameArr.find( person => person.name == searchedName )
-		return typeof(result) == 'object'?true:false
+		return typeof(result) == 'object'?result.id:false
 	 }
 
 	const [ newName, setNewName ] = useState('')
 	const [ newPhone, setNewphone ] = useState('')
 
-	const handlerSubmit = (event)=> {
+	const handlerSubmit = async (event)=> {
 		event.preventDefault()
 		
 		const newPerson = {
 		  name : newName,
 		  number: newPhone,
 		}
-		if (!isRepeat(newName,persons)){
-			setPersons(persons.concat(newPerson))
+		if (isRepeat(newName,persons)){
+			const personId = isRepeat(newName,persons)
+            const body = {...newPerson, id: personId}
+			const confirm = window.confirm(`${newPerson.name} ya existe. ¿Quiere cambiar el numero de telefono?`)
+			if (confirm){
+                console.log("🚀 ~ file: Form.js ~ line 31 ~ handlerSubmit ~ body", body)
+				phoneService.updatePerson(body)
+				window.location.reload(false)
+			}
 		}
 		else {
-			alert(`El nombre ${newName} ya existe`)
+			phoneService.addPerson(newPerson).then( result => setPersons(persons.concat(result)))
 		}
 	 }
 
